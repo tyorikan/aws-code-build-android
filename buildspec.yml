@@ -1,0 +1,28 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - echo Install started on `date`
+  pre_build:
+    commands:
+      - echo Pre Build started on `date`
+      - wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
+      - tar -xvf android-sdk_r24.4.1-linux.tgz
+      - sudo mv android-sdk-linux /opt/
+      - export ANDROID_HOME=/opt/android-sdk-linux
+      - export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+      - mkdir $ANDROID_HOME/licenses
+      - echo 8933bad161af4178b1185d1a37fbf41ea5269c55 > $ANDROID_HOME/licenses/android-sdk-license
+      - /opt/android-sdk-linux/tools/android update sdk --no-ui
+  build:
+    commands:
+      - echo Build started on `date`
+      - ./gradlew --debug --stacktrace build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - target/aws-code-build-android.jar
+  discard-paths: yes
